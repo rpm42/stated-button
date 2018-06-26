@@ -3,6 +3,10 @@
 import Vue from 'vue'
 import App from './App'
 import store from './store.js'
+import Rx from 'rxjs/Rx'
+import VueRx from 'vue-rx'
+
+Vue.use(VueRx, Rx)
 
 Vue.config.productionTip = false
 

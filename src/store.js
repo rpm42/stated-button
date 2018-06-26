@@ -4,12 +4,12 @@ import Vuex, { Store } from 'vuex'
 Vue.use(Vuex)
 
 const state = {
-  state: 'init'
+  button: 'INIT'
 }
 
 const mutations = {
   SET_STATE(state, value) {
-    Vue.set(state, 'state', value)
+    Vue.set(state, 'button', value)
   }
 }
 

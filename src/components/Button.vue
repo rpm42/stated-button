@@ -1,17 +1,16 @@
 <template>
   <button class="stated-button" 
-    :class="button.style"
-    :disabled="button.disabled"
+    :class="view.style"
+    :disabled="view.disabled"
     v-stream:click="plus$"
     >
-    {{ button.caption }}
+    {{ view.caption }}
     {{ count }}
   </button>
 </template>
 
 <script>
-import Vue from 'vue'
-import { Subject } from 'rxjs'
+import { Subject, Observable } from 'rxjs'
 import { map, startWith, scan } from 'rxjs/operators'
 
 export default {
@@ -33,12 +32,7 @@ export default {
       disabled: true
     }
   },
-  data() {
-    return {
-      button: {}
-    }
-  },
-  transitionMap: {
+  transitions: {
     INIT: {
       'request-success': ['ACTIVE'],
       'request-failed': ['ERROR']
@@ -50,29 +44,51 @@ export default {
       'request-success': ['ACTIVE']
     }
   },
-  beforeMount() {
-    Vue.set(this, 'button', this.$options.states[this.$store.state.button])
+  data() {
+    return {}
   },
   mounted() {
-    const subject = new Subject()
-    setTimeout(() => {
-      this.$store.dispatch('setState', 'ACTIVE')
-      subject.next(2)
-    }, 5000)
-    setTimeout(() => {
-      this.$store.dispatch('setState', 'ERROR')
-      subject.next(1)
-    }, 2000)
-    subject.subscribe({
-      next: value => {
-        console.log('subscribe', value)
-      }
-    })
+    console.log('created', this.$observables.request$)
+    // const request = new Observable.create(this.request)
+    // this.$observables.request$.subscribe(this.stateChange)
+    this.$subscribeTo(this.$observables.request$, this.stateChange)
   },
-  stateChange(event) {},
+  destroyed() {
+    console.log('destroyed')
+    if (this.timeoutId) clearTimeout(this.timeoutId)
+  },
+  methods: {
+    request(observer) {
+      this.timeoutId = setTimeout(() => {
+        if (Math.round(Math.random() * 10) > 6) {
+          observer.next({
+            event: 'request-failed',
+            data: null
+          })
+        } else {
+          observer.next({
+            event: 'request-success',
+            data: null
+          })
+        }
+        this.request(observer)
+      }, 3000)
+    },
+    stateChange({ event, data }) {
+      console.log('stateChange', event, data)
+      const currentState = this.$store.state.button
+      const transition = this.$options.transitions[currentState][event]
+      if (transition && transition.length > 0) {
+        const nextState = transition[transition.length - 1]
+        this.$store.dispatch('setState', nextState)
+      }
+    }
+  },
   subscriptions() {
+    console.log('subscriptions')
     this.plus$ = new Subject()
     return {
+      request$: new Observable.create(this.request),
       count: this.plus$.pipe(
         map(() => 1),
         startWith(0),
@@ -80,10 +96,12 @@ export default {
       )
     }
   },
-  watch: {
-    '$store.state.button': function(value) {
-      console.log(value)
-      Vue.set(this, 'button', this.$options.states[value])
+  computed: {
+    state() {
+      return this.$store.state.button
+    },
+    view() {
+      return this.$options.states[this.state]
     }
   }
 }
