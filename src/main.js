@@ -5,8 +5,10 @@ import App from './App'
 import store from './store.js'
 import Rx from 'rxjs/Rx'
 import VueRx from 'vue-rx'
+import RxFsm from '@/plugins/rx-fsm'
 
 Vue.use(VueRx, Rx)
+Vue.use(RxFsm)
 
 Vue.config.productionTip = false
 

@@ -4,7 +4,10 @@ import Vuex, { Store } from 'vuex'
 Vue.use(Vuex)
 
 const state = {
-  button: 'INIT'
+  input: {
+    state: 'INIT',
+    data: {}
+  }
 }
 
 const mutations = {

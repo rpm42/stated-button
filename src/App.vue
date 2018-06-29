@@ -1,22 +1,18 @@
 <template>
   <div id="app">
     <div class="block">
-      <Button/>
-    </div>
-    <div class="block mt">
-      <button>1</button>
-      <button>2</button>
+      <Input/>
     </div>
   </div>
 </template>
 
 <script>
-import Button from './components/Button'
+import Input from './components/Input'
 
 export default {
   name: 'App',
   components: {
-    Button
+    Input
   }
 }
 </script>

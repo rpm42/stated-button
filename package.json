@@ -1,7 +1,7 @@
 {
-  "name": "test-project",
+  "name": "input3",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "With new state-machine",
   "main": "src/main.js",
   "private": true,
   "scripts": {
