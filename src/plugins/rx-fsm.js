@@ -1,16 +1,6 @@
 import Vue from 'vue'
 import { Subject, BehaviorSubject, Observable, Subscription } from 'rxjs'
-import {
-  map,
-  share,
-  distinctUntilChanged,
-  filter,
-  concatMap,
-  withLatestFrom,
-  debounceTime,
-  tap,
-  pluck
-} from 'rxjs/operators'
+import { map, filter, concatMap, withLatestFrom, tap } from 'rxjs/operators'
 import { assert, isArray, isFunc, isObject, isString } from '@/utils/assert'
 
 class Transitions {
@@ -159,8 +149,6 @@ const mixin = {
 
 export default function RxFsm(Vue) {
   Vue.mixin(mixin)
-  // Vue.directive('stream', streamDirective)
-  // Vue.prototype.$signal = _ => {}
 }
 
 // auto install
